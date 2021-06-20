@@ -45,7 +45,11 @@ if ( $user_id == "" || $user_pw == "" ) {
     $_SESSION['user_id'] = $user_id;
     $_SESSION['user_name'] = $row['NAME'];
 
-    echo "location.href='v_user_main.php'</script>";
+    if ($user_id != 0) {  // 일반 유저
+      echo "location.href='v_user_main.php?id=ebook'</script>";
+    } else {  // 관리자
+      echo "location.href='v_admin_main.php?id=cur_rent'</script>";
+    }
   }
 }
 ?>
