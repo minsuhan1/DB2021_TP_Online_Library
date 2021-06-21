@@ -21,7 +21,7 @@
   $stmt0 = $conn -> prepare("SELECT CNO FROM EBOOK WHERE ISBN = {$_GET['isbn']}");
   $stmt0 -> execute();
   $row0 = $stmt0 -> fetch(PDO::FETCH_ASSOC);
-  if ($row0['CNO'] >= 0){
+  if (isset($row0['CNO'])){
     echo "<script>alert('이미 대출중인 도서입니다.');";
     echo "window.location.replace('v_user_main.php?id=ebook');</script>";
     exit;
