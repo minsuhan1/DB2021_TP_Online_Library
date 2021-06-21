@@ -17,6 +17,16 @@
   } catch (PDOException $e) {
     echo "에러 내용: ".$e->getMessage();
   }
+  // 이미 대출중인 도서인지 확인
+  $stmt0 = $conn -> prepare("SELECT CNO FROM EBOOK WHERE ISBN = {$_GET['isbn']}");
+  $stmt0 -> execute();
+  $row0 = $stmt0 -> fetch(PDO::FETCH_ASSOC);
+  if ($row0['CNO'] >= 0){
+    echo "<script>alert('이미 대출중인 도서입니다.');";
+    echo "window.location.replace('v_user_main.php?id=ebook');</script>";
+    exit;
+  }
+
   // 현재 대출도서 수 확인
   $stmt = $conn -> prepare("SELECT COUNT(CNO) RENT_COUNT FROM EBOOK WHERE CNO = {$_SESSION['user_id']}");
   $stmt -> execute();

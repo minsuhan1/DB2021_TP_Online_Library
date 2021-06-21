@@ -39,15 +39,16 @@ try {
           <th>출판년도</th>
           <th>대출일</th>
           <th>반납기한</th>
+          <th>연장횟수</th>
           <th>반납</th>
           <th>연장</th>
         </thead>
         <tbody>
           <?php
             $stmt = $conn -> prepare("SELECT E.ISBN ISBN, E.TITLE TITLE, lISTAGG(A.AUTHOR, ',') WITHIN GROUP(ORDER BY A.AUTHOR) AS AUTHORS, E.PUBLISHER PUBLISHER,
-EXTRACT(YEAR FROM E.YEAR) YEAR, E.DATERENTED DATERENTED, E.DATEDUE DATEDUE
+EXTRACT(YEAR FROM E.YEAR) YEAR, E.EXTTIMES EXTTIMES, E.DATERENTED DATERENTED, E.DATEDUE DATEDUE
 FROM EBOOK E, AUTHORS A
-WHERE E.CNO = {$_SESSION['user_id']} AND E.ISBN = A.ISBN group by E.ISBN, E.TITLE, E.YEAR, E.PUBLISHER, E.DATERENTED, E.DATEDUE");
+WHERE E.CNO = {$_SESSION['user_id']} AND E.ISBN = A.ISBN group by E.ISBN, E.TITLE, E.YEAR, E.PUBLISHER, E.EXTTIMES, E.DATERENTED, E.DATEDUE");
             $stmt -> execute();
             while ($row = $stmt -> fetch(PDO::FETCH_ASSOC)) {
           ?>
@@ -59,6 +60,7 @@ WHERE E.CNO = {$_SESSION['user_id']} AND E.ISBN = A.ISBN group by E.ISBN, E.TITL
                 <td><?=$row['YEAR']?></td>
                 <td><?=$row['DATERENTED']?></td>
                 <td><?=$row['DATEDUE']?></td>
+                <td><?=$row['EXTTIMES']?></td>
                 <?php echo "<td><a href=\"user_process_return.php?isbn={$row['ISBN']}\">반납</a></td>"; ?>
                 <?php echo "<td><a href=\"user_process_extend.php?isbn={$row['ISBN']}\">연장</a></td>"; ?>
               </tr>
