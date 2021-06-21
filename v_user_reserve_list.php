@@ -40,14 +40,15 @@ try {
           <th>예약일</th>
           <th>대기순번</th>
           <th>예약취소</th>
+          <th>대출하기</th>
         </thead>
         <tbody>
           <?php
-            $stmt = $conn -> prepare("SELECT R.ISBN ISBN, E.TITLE TITLE, LISTAGG(A.AUTHOR, ',') WITHIN GROUP(ORDER BY A.AUTHOR) AS AUTHORS,
+            $stmt = $conn -> prepare("SELECT R.ISBN ISBN, E.CNO CNO, E.TITLE TITLE, LISTAGG(A.AUTHOR, ',') WITHIN GROUP(ORDER BY A.AUTHOR) AS AUTHORS,
 E.PUBLISHER PUBLISHER, EXTRACT(YEAR FROM E.YEAR) YEAR, R.DATETIME
 FROM RESERVE R, EBOOK E, AUTHORS A
 WHERE R.CNO = {$_SESSION['user_id']} AND R.ISBN = E.ISBN AND R.ISBN = A.ISBN
-group by R.ISBN, E.TITLE, E.PUBLISHER, EXTRACT(YEAR FROM E.YEAR), E.YEAR, R.ISBN, R.DATETIME");
+group by R.ISBN, E.TITLE, E.CNO, E.PUBLISHER, EXTRACT(YEAR FROM E.YEAR), E.YEAR, R.ISBN, R.DATETIME");
             $stmt -> execute();
             while ($row = $stmt -> fetch(PDO::FETCH_ASSOC)) {
           ?>
@@ -68,7 +69,14 @@ WHERE CNO = {$_SESSION['user_id']}");
                 ?>
                 <td><?=$row2['RANK']?></td>
                 <!--예약취소버튼-->
-                <?php echo "<td><a href=\"user_process_reserve_cancel.php?isbn={$row['ISBN']}\">취소</a></td>"; ?>
+                <?php echo "<td><a href=\"user_process_reserve_cancel.php?isbn={$row['ISBN']}\">취소</a></td>";
+                // 대기순번이 1이고 대출자가 없는 상태이면 대출버튼 활성화
+                if ($row2['RANK'] == 1 && is_null($row['CNO'])) {
+                  echo "<td><a href=\"user_process_rent_reserved.php?isbn={$row['ISBN']}\">대출</a></td>";
+                }else{
+                  echo "<td></td>";
+                }
+                ?>
               </tr>
           <?php
             }
