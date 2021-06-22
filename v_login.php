@@ -11,6 +11,7 @@
   <body>
     <form action="loginChk.php" method="post">
       <center>
+        <h1>LOGIN</h1>
         <p>
           <input type="text" name="user_id" placeholder="회원번호" maxlength="5" style="width: 150;">
         </p>
