@@ -71,16 +71,16 @@
             <!--검색 필터 바탕으로 쿼리구성-->
             <?php
               $filter = "";
-              if(isset($_POST['title'])) {
+              if(!empty($_POST['title'])) {
                 $filter .= "AND E.TITLE LIKE '%".$_POST['title']."%'";
               }
-              if(isset($_POST['author'])) {
+              if(!empty($_POST['author'])) {
                 $filter .= "AND A.AUTHOR LIKE '%".$_POST['author']."%'";
               }
-              if(isset($_POST['publisher'])) {
+              if(!empty($_POST['publisher'])) {
                 $filter .= "AND E.PUBLISHER LIKE '%".$_POST['publisher']."%'";
               }
-              if(isset($_POST['year'])) {
+              if(!empty($_POST['year'])) {
                 $filter .= "AND EXTRACT(YEAR FROM E.YEAR) LIKE '%".$_POST['year']."%'";
               }
             ?>

@@ -22,13 +22,9 @@
   $stmt0 = $conn -> prepare("SELECT CNO, DATERENTED FROM EBOOK WHERE ISBN = {$_GET['isbn']}");
   $stmt0 -> execute();
   $row0 = $stmt0 -> fetch(PDO::FETCH_ASSOC);
-  if ($row0['CNO'] != $_SESSION['user_id']){
-    echo "<script>alert('잘못된 접근입니다.');";
-    echo "window.location.replace('v_login.php');</script>";
-    exit;
-  }
-  // 본인이 대출한 도서가 맞는 경우 반납처리
-  if ($row0['CNO'] == $_SESSION['user_id']) {
+
+  // 세션이 관리자이거나 본인이 대출한 도서가 맞는 경우 반납처리
+  if ($row0['CNO'] == $_SESSION['user_id'] or $_SESSION['user_id'] == 0) {
     // EBOOK 테이블 업데이트
     $stmt1 = $conn -> prepare("UPDATE EBOOK
       SET CNO = '', EXTTIMES = '', DATERENTED = '', DATEDUE = ''
@@ -43,7 +39,16 @@
     $stmt2 -> execute();
 
     echo "<script>alert('반납되었습니다.');";
-    echo "window.location.replace('v_user_main.php?id=rent_list');</script>";
+    if ($_SESSION['user_id'] == 0) {
+      echo "window.location.replace('v_admin_main.php?id=cur_rent_list');</script>";
+    } else {
+      echo "window.location.replace('v_user_main.php?id=rent_list');</script>";
+    }
+  }
+  else {
+    echo "<script>alert('잘못된 접근입니다.');";
+    echo "window.location.replace('v_login.php');</script>";
+    exit;
   }
 
   // TODO: 대기순번이 1인 예약자에게 메일 전송

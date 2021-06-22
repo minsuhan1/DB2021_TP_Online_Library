@@ -18,13 +18,28 @@
     echo "에러 내용: ".$e->getMessage();
   }
 
-  // 예약내역에서 삭제
-  $stmt = $conn -> prepare("DELETE FROM RESERVE
-    WHERE ISBN = {$_GET['isbn']} AND CNO = {$_SESSION['user_id']}");
-  $stmt -> execute();
+  // 관리자가 회원의 예약을 취소하는 경우
+  if ($_SESSION['user_id'] == 0) {
+    // 예약내역에서 삭제
+    $stmt = $conn -> prepare("DELETE FROM RESERVE
+      WHERE ISBN = {$_GET['isbn']} AND CNO = {$_GET['cno']}");
+    $stmt -> execute();
 
-  echo "<script>alert('예약이 취소되었습니다.');";
-  echo "window.location.replace('v_user_main.php?id=reserve_list');</script>";
+    echo "<script>alert('예약이 취소되었습니다.');";
+    echo "window.location.replace('v_admin_main.php?id=cur_reserve_list');</script>";
 
-  // TODO: 대기순번 1번인 회원에게 메일 발송
+    // TODO: 대기순번 1번인 회원에게 메일 발송
+
+    exit;
+  } else {  // 일반 회원이 예약취소하는 경우
+    // 예약내역에서 삭제
+    $stmt = $conn -> prepare("DELETE FROM RESERVE
+      WHERE ISBN = {$_GET['isbn']} AND CNO = {$_SESSION['user_id']}");
+    $stmt -> execute();
+
+    echo "<script>alert('예약이 취소되었습니다.');";
+    echo "window.location.replace('v_user_main.php?id=reserve_list');</script>";
+
+    // TODO: 대기순번 1번인 회원에게 메일 발송
+  }
 ?>
