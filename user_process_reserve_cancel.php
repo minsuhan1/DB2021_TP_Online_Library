@@ -34,7 +34,7 @@
     $stmt -> execute();
 
     // 대기번호가 1순위인 예약자에게 메일 발송
-    // 예약된 도서인 경우 1순위 예약자에게 메일 발송
+    // 예약된 도서인 경우 1순위 예약자에게 대기순위 안내 메일 발송
     $stmt4 = $conn -> prepare("SELECT *
     FROM (SELECT * FROM RESERVE WHERE ISBN = {$_GET['isbn']} ORDER BY DATETIME ASC)
     WHERE ROWNUM = 1");
@@ -77,8 +77,8 @@
 
           // Content
           $mail->isHTML(true);                                  // Set email format to HTML
-          $mail->Subject = '예약하신 도서를 대출하실 수 있습니다.';
-          $mail->Body    = "예약하신 도서 \"{$row6['TITLE']}\"가 반납되어 이제 대출하실 수 있습니다.";
+          $mail->Subject = '예약 도서 대기순위 알림';
+          $mail->Body    = "예약 도서: \"{$row6['TITLE']}\"<br>대기순위: 1";
 
           $mail->send();
 
@@ -143,8 +143,8 @@
 
           // Content
           $mail->isHTML(true);                                  // Set email format to HTML
-          $mail->Subject = '예약하신 도서를 대출하실 수 있습니다.';
-          $mail->Body    = "예약하신 도서 \"{$row6['TITLE']}\"가 반납되어 이제 대출하실 수 있습니다.";
+          $mail->Subject = '예약 도서 대기순위 알림';
+          $mail->Body    = "예약 도서: \"{$row6['TITLE']}\"<br>대기순위: 1";
 
           $mail->send();
 
