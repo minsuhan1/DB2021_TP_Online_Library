@@ -111,11 +111,20 @@
                       <td><?=$row['AUTHORS']?></td>
                       <td><?=$row['PUBLISHER']?></td>
                       <td><?=$row['YEAR']?></td>
-                      <td><?=$row['POS']?></td>
                       <?php
-                        if ($row['POS'] == '대출가능') {
+                        $stmt1 = $conn -> prepare("SELECT CNO FROM RESERVE WHERE ISBN = {$row['ISBN']}");
+                        $stmt1 -> execute();
+                        $row1 = $stmt1 -> fetch(PDO::FETCH_ASSOC);
+
+                        $isRes = 0;  // 예약중인 도서이면 isRes > 0
+                        if(isset($row1['CNO'])){
+                          $isRes = $row1['CNO'];
+                        }
+                        if ($row['POS'] == '대출가능' && $isRes == 0) {  // 대출가능한 경우
+                          echo "<td>대출가능</td>";
                           echo "<td><a href=\"user_process_rent.php?isbn={$row['ISBN']}\">대출</a></td>";
-                        } else {
+                        } else {  // 대출중이거나 예약자가 있는경우
+                          echo "<td>대출/예약중</td>";
                           echo "<td><a href=\"user_process_reserve.php?isbn={$row['ISBN']}\">예약</a></td>";
                         }
                       ?>
