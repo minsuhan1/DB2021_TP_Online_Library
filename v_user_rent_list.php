@@ -2,6 +2,7 @@
   include_once('sessionChk.php')
 ?>
 <?php
+// DB 연동
 $tns = "
   (DESCRIPTION=
     (ADDRESS_LIST= (ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521)))
@@ -45,6 +46,7 @@ try {
         </thead>
         <tbody>
           <?php
+            // 현재 세션 유저의 대출중인 도서 목록을 출력하는 쿼리
             $stmt = $conn -> prepare("SELECT E.ISBN ISBN, E.TITLE TITLE, lISTAGG(A.AUTHOR, ',') WITHIN GROUP(ORDER BY A.AUTHOR) AS AUTHORS, E.PUBLISHER PUBLISHER,
 EXTRACT(YEAR FROM E.YEAR) YEAR, E.EXTTIMES EXTTIMES, E.DATERENTED DATERENTED, E.DATEDUE DATEDUE
 FROM EBOOK E, AUTHORS A
@@ -61,6 +63,7 @@ WHERE E.CNO = {$_SESSION['user_id']} AND E.ISBN = A.ISBN group by E.ISBN, E.TITL
                 <td><?=$row['DATERENTED']?></td>
                 <td><?=$row['DATEDUE']?></td>
                 <td><?=$row['EXTTIMES']?></td>
+                <!-- 반납 및 연장 버튼 -->
                 <?php echo "<td><a href=\"user_process_return.php?isbn={$row['ISBN']}\">반납</a></td>"; ?>
                 <?php echo "<td><a href=\"user_process_extend.php?isbn={$row['ISBN']}\">연장</a></td>"; ?>
               </tr>

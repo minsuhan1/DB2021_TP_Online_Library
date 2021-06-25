@@ -3,9 +3,9 @@
   use PHPMailer\PHPMailer\Exception;
   use PHPMailer\PHPMailer\SMTP;
 
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/PHPMailer.php";
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/SMTP.php";
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/Exception.php";
+  require "./PHPMailer/src/PHPMailer.php";
+  require "./PHPMailer/src/SMTP.php";
+  require "./PHPMailer/src/Exception.php";
   // 반납 기일이 도래한 도서를 자정이 되면 자동적으로 반납 처리되도록 함.
   // 예약자가 있는 도서를 반납한 경우 1순위 예약자에게 메일 발송
   // 자동화 스케줄링 프로그램 cron을 사용하여 매일 자정마다 본 php 파일을 실행

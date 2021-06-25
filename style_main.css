@@ -30,14 +30,3 @@ html,body{
 .aside_list:visited { color: blue; text-decoration: none; font-weight: bold}
 .aside_list:hover { color: red; text-decoration: underline; font-weight: bold}
 .aside_list:active { color: white; background-color: green; font-weight: bold}
-
-/* .aside_list{
-  text-decoration: none;
-  font-size:1rem;
-  color:black;
-  padding:px 20px 10px 20px;
-  margin:0px;
-  transition:all 0.1s;
-  font-weight: bold;
-  border-color: yellow;
-} */

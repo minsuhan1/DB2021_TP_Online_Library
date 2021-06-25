@@ -3,9 +3,9 @@
   use PHPMailer\PHPMailer\Exception;
   use PHPMailer\PHPMailer\SMTP;
 
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/PHPMailer.php";
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/SMTP.php";
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/Exception.php";
+  require "./PHPMailer/src/PHPMailer.php";
+  require "./PHPMailer/src/SMTP.php";
+  require "./PHPMailer/src/Exception.php";
 
   session_start();
   include_once('sessionChk.php');

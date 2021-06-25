@@ -2,6 +2,7 @@
   include_once('sessionChk.php')
 ?>
 <?php
+// DB 연동
 $tns = "
   (DESCRIPTION=
     (ADDRESS_LIST= (ADDRESS=(PROTOCOL=TCP)(HOST=127.0.0.1)(PORT=1521)))
@@ -44,6 +45,7 @@ try {
         </thead>
         <tbody>
           <?php
+            // 회원의 예약도서목록을 출력하는 쿼리
             $stmt = $conn -> prepare("SELECT R.ISBN ISBN, E.CNO CNO, E.TITLE TITLE, LISTAGG(A.AUTHOR, ',') WITHIN GROUP(ORDER BY A.AUTHOR) AS AUTHORS,
 E.PUBLISHER PUBLISHER, EXTRACT(YEAR FROM E.YEAR) YEAR, R.DATETIME
 FROM RESERVE R, EBOOK E, AUTHORS A

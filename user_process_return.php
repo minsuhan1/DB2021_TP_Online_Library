@@ -3,10 +3,9 @@
   use PHPMailer\PHPMailer\Exception;
   use PHPMailer\PHPMailer\SMTP;
 
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/PHPMailer.php";
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/SMTP.php";
-  require "C:/Users/MinsuHan/Documents/PHPMailer/src/Exception.php";
-
+  require "./PHPMailer/src/PHPMailer.php";
+  require "./PHPMailer/src/SMTP.php";
+  require "./PHPMailer/src/Exception.php";
   session_start();
   include_once('sessionChk.php');
 
@@ -26,7 +25,6 @@
     echo "에러 내용: ".$e->getMessage();
   }
 
-  // 본인이 대출중인 도서인지 확인
   $stmt0 = $conn -> prepare("SELECT CNO, DATERENTED, TITLE FROM EBOOK WHERE ISBN = {$_GET['isbn']}");
   $stmt0 -> execute();
   $row0 = $stmt0 -> fetch(PDO::FETCH_ASSOC);
@@ -91,7 +89,14 @@
           $mail->send();
 
           echo "<script>alert('반납되었습니다.');</script>";
-          echo "<script>window.location.replace('v_user_main.php?id=rent_list');</script>";
+          // 반납처리 완료
+          if ($_SESSION['user_id'] == 0) {
+            echo "<script>alert('반납되었습니다.');</script>";
+            echo "<script>window.location.replace('v_admin_main.php?id=cur_rent_list');</script>";
+          } else {
+            echo "<script>alert('반납되었습니다.');</script>";
+            echo "<script>window.location.replace('v_user_main.php?id=rent_list');</script>";
+          }
       } catch (Exception $e) {
           echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
       }

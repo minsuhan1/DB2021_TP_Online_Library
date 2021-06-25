@@ -1,4 +1,5 @@
 <?php
+  // 세션 체크
   session_start();
   include_once('sessionChk.php')
 ?>
@@ -24,21 +25,21 @@
         </p>
       </header>
       <div class="content">
-        <div class="aside"> <!--사이드바-->
+        <div class="aside"> <!--사이드바, 회원 기능 메뉴 -->
           <ul style="list-style:none;">
             <div style="padding:20px;"></div>
             <li><a class="aside_list" href="v_user_main.php?id=ebook">도서검색<br><br></a></li>
             <li><a class="aside_list" href="v_user_main.php?id=rent_list">대출목록조회<br><br></a></li>
             <li><a class="aside_list" href="v_user_main.php?id=reserve_list">예약목록조회</a></li>
           </ul>
-        </div>  <!--사용자 요청 페이지 화면-->
+        </div>  <!--사용자 요청 페이지 화면(URL 파라미터 id값으로 구분)-->
         <div class="main" style="width:100%;height:810px;overflow-y:auto;overflow-x:hidden; padding:20px">
           <?php
-          if (!isset($_GET['id'])) {
+          if (!isset($_GET['id'])) {  // id is not set
             echo "<script>window.location.replace('v_user_main.php?id=ebook');</script>";
-          } else if($_GET['id'] != 'ebook'){
+          } else if($_GET['id'] != 'ebook'){  // id = rent_list or reserve_list
             include_once('v_user_'.$_GET['id'].'.php');
-          } else {
+          } else {  // 도서검색 페이지 (id = ebook)
             // DB 연동
             $tns = "
               (DESCRIPTION=
@@ -97,6 +98,7 @@
               </thead>
               <tbody>
                 <?php
+                  // DB에 저장된 도서들의 정보를 출력하는 쿼리, 도서 정보와 대출가능여부를 알아낸다.
                   $stmt = $conn -> prepare("SELECT E.ISBN ISBN, E.TITLE TITLE, lISTAGG(A.AUTHOR, ',') WITHIN GROUP(ORDER BY A.AUTHOR) AS AUTHORS, E.PUBLISHER PUBLISHER,
       EXTRACT(YEAR FROM E.YEAR) YEAR, CASE WHEN E.CNO IS NOT NULL THEN '대출중' ELSE '대출가능' END AS POS
       FROM EBOOK E, AUTHORS A
@@ -112,6 +114,7 @@
                       <td><?=$row['PUBLISHER']?></td>
                       <td><?=$row['YEAR']?></td>
                       <?php
+                        // 현재 도서가 예약중인 도서인지 확인하는 쿼리
                         $stmt1 = $conn -> prepare("SELECT CNO FROM RESERVE WHERE ISBN = {$row['ISBN']}");
                         $stmt1 -> execute();
                         $row1 = $stmt1 -> fetch(PDO::FETCH_ASSOC);
@@ -120,11 +123,11 @@
                         if(isset($row1['CNO'])){
                           $isRes = $row1['CNO'];
                         }
-                        if ($row['POS'] == '대출가능' && $isRes == 0) {  // 대출가능한 경우
-                          echo "<td>대출가능</td>";
+                        if ($row['POS'] == '대출가능' && $isRes == 0) {  // 대출가능한 경우 대출버튼 활성화
+                          echo "<td>대출가능</td>"; // 대출가능 표시
                           echo "<td><a href=\"user_process_rent.php?isbn={$row['ISBN']}\">대출</a></td>";
-                        } else {  // 대출중이거나 예약자가 있는경우
-                          echo "<td>대출/예약중</td>";
+                        } else {  // 대출중이거나 예약자가 있는경우 예약버튼 활성화
+                          echo "<td>대출/예약중</td>"; // 대출-예약중 표시
                           echo "<td><a href=\"user_process_reserve.php?isbn={$row['ISBN']}\">예약</a></td>";
                         }
                       ?>
